@@ -1,17 +1,51 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+  <ul>
+    <Todo
+      v-for="todo in todos"
+      v-bind:key="todo.id"
+      :todo="todo"
+      @completeTodo="completeTodo(todos.indexOf(todo))"
+    />
+  </ul>
+  <AddTodoForm v-model:todoText="todoText" :addTodo="addTodo" />
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import HelloWorld from './components/HelloWorld.vue';
+import { defineComponent } from "vue";
+import Todo from "./components/Todo.vue";
+import AddTodoForm from "./components/AddTodoForm.vue";
 
 export default defineComponent({
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
-  }
+    Todo,
+    AddTodoForm,
+  },
+  data: () => {
+    return {
+      todos: [
+        { title: "Take out trash", completed: false, id: 1 },
+        { title: "Study", completed: true, id: 2 },
+      ],
+      todoText: "",
+    };
+  },
+  methods: {
+    addTodo() {
+      this.todos = [
+        ...this.todos,
+        {
+          title: this.todoText,
+          completed: false,
+          id: Math.floor(Math.random()) * 100000,
+        },
+      ];
+      this.todoText = "";
+    },
+    completeTodo(index: number) {
+      this.todos[index].completed = !this.todos[index].completed;
+    },
+  },
 });
 </script>
 
